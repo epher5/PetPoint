@@ -2,12 +2,12 @@ package com.lai.petpoint
 
 class MedicalRecord {
 
-    String diagnosis
+    String vaccinations
     String treatment
     Date date
 
     static constraints = {
-        diagnosis (nullable: false)
+        vaccinations (nullable: false)
         treatment (nullable: false)
         date (nullable: false)
     }
