@@ -3,12 +3,12 @@ package com.lai.petpoint
 class MedicalRecord {
 
     String vaccinations
-    String treatment
+    String comments
     Date date
 
     static constraints = {
         vaccinations (nullable: false)
-        treatment (nullable: false)
+        comments (nullable: true)
         date (nullable: false)
     }
 }
