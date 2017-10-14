@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: org.gebish:geb-spock:0.10.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/gebish/geb-spock/0.10.0/geb-spock-0.10.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
