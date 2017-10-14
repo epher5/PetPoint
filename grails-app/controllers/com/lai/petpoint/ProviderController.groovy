@@ -7,91 +7,91 @@ import grails.plugin.springsecurity.annotation.Secured
 
 @Secured('ROLE_USER')
 @Transactional(readOnly = true)
-class OwnerController {
+class ProviderController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Owner.list(params), model:[ownerCount: Owner.count()]
+        respond Provider.list(params), model:[providerCount: Provider.count()]
     }
 
-    def show(Owner owner) {
-        respond owner
+    def show(Provider provider) {
+        respond provider
     }
 
     def create() {
-        respond new Owner(params)
+        respond new Provider(params)
     }
 
     @Transactional
-    def save(Owner owner) {
-        if (owner == null) {
+    def save(Provider provider) {
+        if (provider == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        if (owner.hasErrors()) {
+        if (provider.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond owner.errors, view:'create'
+            respond provider.errors, view:'create'
             return
         }
 
-        owner.save flush:true
+        provider.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'owner.label', default: 'Owner'), owner.id])
-                redirect owner
+                flash.message = message(code: 'default.created.message', args: [message(code: 'provider.label', default: 'Provider'), provider.id])
+                redirect provider
             }
-            '*' { respond owner, [status: CREATED] }
+            '*' { respond provider, [status: CREATED] }
         }
     }
 
-    def edit(Owner owner) {
-        respond owner
+    def edit(Provider provider) {
+        respond provider
     }
 
     @Transactional
-    def update(Owner owner) {
-        if (owner == null) {
+    def update(Provider provider) {
+        if (provider == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        if (owner.hasErrors()) {
+        if (provider.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond owner.errors, view:'edit'
+            respond provider.errors, view:'edit'
             return
         }
 
-        owner.save flush:true
+        provider.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'owner.label', default: 'Owner'), owner.id])
-                redirect owner
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'provider.label', default: 'Provider'), provider.id])
+                redirect provider
             }
-            '*'{ respond owner, [status: OK] }
+            '*'{ respond provider, [status: OK] }
         }
     }
 
     @Transactional
-    def delete(Owner owner) {
+    def delete(Provider provider) {
 
-        if (owner == null) {
+        if (provider == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        owner.delete flush:true
+        provider.delete flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'owner.label', default: 'Owner'), owner.id])
+                flash.message = message(code: 'default.deleted.message', args: [message(code: 'provider.label', default: 'Provider'), provider.id])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
@@ -101,7 +101,7 @@ class OwnerController {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'owner.label', default: 'Owner'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [message(code: 'provider.label', default: 'Provider'), params.id])
                 redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }
