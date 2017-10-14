@@ -73,6 +73,9 @@ dependencies {
     testRuntime 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.44.0'
 
     console "org.grails:grails-console"
+
+    runtime 'postgresql:postgresql:8.4-702.jdbc3'
+    provided "org.springframework.boot:spring-boot-starter-tomcat"
 }
 
 task wrapper(type: Wrapper) {
