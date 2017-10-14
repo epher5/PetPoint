@@ -85,6 +85,14 @@ environments:
         dataSource:
             dbCreate: update
             url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+    production:
+        dataSource:
+            dbCreate: ignore
+            driverClassName: org.postgresql.Driver
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            url: jdbc:postgresql://ec2-50-19-218-160.compute-1.amazonaws.com:5432/d2bo4c025aamd1
+            username: oukebtsqlbanep
+            password: f10bccbcc0f806e2b105f96532e9d617e7f6197129f1b4e0c459e8c4875be8b4
 #    production:
 #        dataSource:
 #            dbCreate: update
