@@ -87,11 +87,10 @@
             the owner.</p>
 
             <div id="controller-list" role="navigation">
-                <h2>Available Controllers:</h2>
+                <h2>LOGIN:</h2>
                 <ul>
-                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-                        <li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-                    </g:each>
+                    <li class="controller"><a href="/user/index">User Sign-in</a></li>
+                    <li class="controller"><a href="/provider/index">Provider Sign-in</a></li>
                 </ul>
             </div>
         </div>
