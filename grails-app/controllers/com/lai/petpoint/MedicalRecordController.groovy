@@ -1,10 +1,9 @@
 package com.lai.petpoint
 
-import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
-import grails.plugin.springsecurity.annotation.Secured
 
-@Secured('ROLE_USER')
+import static org.springframework.http.HttpStatus.*
+
 @Transactional(readOnly = true)
 class MedicalRecordController {
 
@@ -12,15 +11,31 @@ class MedicalRecordController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond MedicalRecord.list(params), model:[medicalRecordCount: MedicalRecord.count()]
+        Pet pet
+        def medicalRecords = []
+        if (params.petId) {
+            pet = Pet.get(params.petId)
+            println("pet params ${pet}")
+            medicalRecords = pet.medicalRecords
+        }
+        if (!pet) {
+            respond([error: 'Invalid pet'], status: 400)
+        }
+        println("------ pet ${pet.id}")
+        render(view: 'index', model:[medicalRecordList: medicalRecords, medicalRecordCount: medicalRecords.size(), petId: pet.id, pet: pet])
     }
 
     def show(MedicalRecord medicalRecord) {
-        respond medicalRecord
+        println("show params ${params}")
+        Pet pet = Pet.findById(params.petId)
+        respond medicalRecord, model: [pet: pet]
     }
 
     def create() {
-        respond new MedicalRecord(params)
+        log.info("create params ${params}")
+        println("create params ${params}")
+        Pet pet = Pet.findById(params.petId)
+        render(view: 'create', model: [medicalRecord: new MedicalRecord(params), petId: pet.id, pet: pet])
     }
 
     @Transactional
@@ -33,18 +48,22 @@ class MedicalRecordController {
 
         if (medicalRecord.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond medicalRecord.errors, view:'create'
+            respond medicalRecord.errors, view:'create', model: [medicalRecord: new MedicalRecord(params), petId: pet.id, pet: pet]
             return
         }
 
         medicalRecord.save flush:true
 
+        Pet pet = Pet.findById(params.petId)
+        pet.addToMedicalRecords(medicalRecord)
+        pet.save flush:true
+
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'medicalRecord.label', default: 'MedicalRecord'), medicalRecord.id])
-                redirect medicalRecord
+                redirect(action: "show", id: medicalRecord.id, params: [petId: pet.id])
             }
-            '*' { respond medicalRecord, [status: CREATED] }
+            '*' { respond medicalRecord, [status: CREATED, model: [petId: pet.id]] }
         }
     }
 
@@ -71,9 +90,9 @@ class MedicalRecordController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'medicalRecord.label', default: 'MedicalRecord'), medicalRecord.id])
-                redirect medicalRecord
+                redirect(action: "show", id: medicalRecord.id, params: [petId: pet.id])
             }
-            '*'{ respond medicalRecord, [status: OK] }
+            '*' { respond medicalRecord, [status: OK, model: [petId: pet.id]] }
         }
     }
 
@@ -91,7 +110,7 @@ class MedicalRecordController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'medicalRecord.label', default: 'MedicalRecord'), medicalRecord.id])
-                redirect action:"index", method:"GET"
+                redirect(action: "index", method:"GET", id: medicalRecord.id, params: [petId: pet.id])
             }
             '*'{ render status: NO_CONTENT }
         }
@@ -101,7 +120,7 @@ class MedicalRecordController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'medicalRecord.label', default: 'MedicalRecord'), params.id])
-                redirect action: "index", method: "GET"
+                redirect(action: "index", method: "GET", id: medicalRecord.id, params: [petId: pet.id])
             }
             '*'{ render status: NOT_FOUND }
         }

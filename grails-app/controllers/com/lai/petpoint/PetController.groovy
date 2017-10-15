@@ -1,31 +1,48 @@
 package com.lai.petpoint
 
-import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
-import grails.plugin.springsecurity.annotation.Secured
+import static org.springframework.http.HttpStatus.*
 
-@Secured('ROLE_USER')
 @Transactional(readOnly = true)
 class PetController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
+        log.info("index params ${params}")
         params.max = Math.min(max ?: 10, 100)
-        respond Pet.list(params), model:[petCount: Pet.count()]
+        params.sort = 'name'
+        Owner owner
+        def pets = []
+        if (params.ownerId) {
+            owner = Owner.get(params.ownerId)
+            println("owner params ${owner}")
+            pets = owner.pets
+        }
+        if (!owner) {
+            respond([error: 'Invalid owner'], status: 400)
+        }
+        println("------ owner ${owner.id}")
+        render(view: 'index', model:[petList: pets, petCount: pets.size(), ownerId: owner.id, owner: owner])
     }
 
     def show(Pet pet) {
-        respond pet
+        println("show params ${params}")
+        Owner owner = Owner.findById(params.ownerId)
+        respond pet, model: [owner: owner]
     }
 
     def create() {
-        respond new Pet(params)
+        log.info("create params ${params}")
+        println("create params ${params}")
+        Owner owner = Owner.findById(params.ownerId)
+        render(view: 'create', model: [pet: new Pet(params), ownerId: owner.id, owner: owner])
     }
 
     @Transactional
     def save(Pet pet) {
+        println("create params ${params}")
         if (pet == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -34,18 +51,22 @@ class PetController {
 
         if (pet.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond pet.errors, view:'create'
+            respond pet.errors, view:'create', model: [pet: new Pet(params), ownerId: owner.id, owner: owner]
             return
         }
 
         pet.save flush:true
 
+        Owner owner = Owner.findById(params.ownerId)
+        owner.addToPets(pet)
+        owner.save flush:true
+
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'pet.label', default: 'Pet'), pet.id])
-                redirect pet
+                redirect(action: "show", id: pet.id, params: [ownerId: owner.id])
             }
-            '*' { respond pet, [status: CREATED] }
+            '*' { respond pet, [status: CREATED, model: [ownerId: owner.id]] }
         }
     }
 
@@ -72,9 +93,9 @@ class PetController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'pet.label', default: 'Pet'), pet.id])
-                redirect pet
+                redirect(action: "show", id: pet.id, params: [ownerId: owner.id])
             }
-            '*'{ respond pet, [status: OK] }
+            '*' { respond pet, [status: OK, model: [ownerId: owner.id]] }
         }
     }
 
@@ -92,7 +113,7 @@ class PetController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'pet.label', default: 'Pet'), pet.id])
-                redirect action:"index", method:"GET"
+                redirect(action: "index", method:"GET", id: pet.id, params: [ownerId: owner.id])
             }
             '*'{ render status: NO_CONTENT }
         }
@@ -102,7 +123,7 @@ class PetController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'pet.label', default: 'Pet'), params.id])
-                redirect action: "index", method: "GET"
+                redirect(action: "index", method:"GET", id: pet.id, params: [ownerId: owner.id])
             }
             '*'{ render status: NOT_FOUND }
         }

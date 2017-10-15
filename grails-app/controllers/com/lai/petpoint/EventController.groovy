@@ -1,95 +1,94 @@
 package com.lai.petpoint
 
+import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
-import static org.springframework.http.HttpStatus.*
-
 @Transactional(readOnly = true)
-class UserController {
+class EventController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond User.list(params), model:[userCount: User.count()]
+        respond Event.list(params), model:[eventCount: Event.count()]
     }
 
-    def show(User user) {
-        respond user
+    def show(Event event) {
+        respond event
     }
 
     def create() {
-        respond new User(params)
+        respond new Event(params)
     }
 
     @Transactional
-    def save(User user) {
-        if (user == null) {
+    def save(Event event) {
+        if (event == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        if (user.hasErrors()) {
+        if (event.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond user.errors, view:'create'
+            respond event.errors, view:'create'
             return
         }
 
-        user.save flush:true
+        event.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'user.label', default: 'User'), user.id])
-                redirect user
+                flash.message = message(code: 'default.created.message', args: [message(code: 'event.label', default: 'Event'), event.id])
+                redirect event
             }
-            '*' { respond user, [status: CREATED] }
+            '*' { respond event, [status: CREATED] }
         }
     }
 
-    def edit(User user) {
-        respond user
+    def edit(Event event) {
+        respond event
     }
 
     @Transactional
-    def update(User user) {
-        if (user == null) {
+    def update(Event event) {
+        if (event == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        if (user.hasErrors()) {
+        if (event.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond user.errors, view:'edit'
+            respond event.errors, view:'edit'
             return
         }
 
-        user.save flush:true
+        event.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'user.label', default: 'User'), user.id])
-                redirect user
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'event.label', default: 'Event'), event.id])
+                redirect event
             }
-            '*'{ respond user, [status: OK] }
+            '*'{ respond event, [status: OK] }
         }
     }
 
     @Transactional
-    def delete(User user) {
+    def delete(Event event) {
 
-        if (user == null) {
+        if (event == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        user.delete flush:true
+        event.delete flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'user.label', default: 'User'), user.id])
+                flash.message = message(code: 'default.deleted.message', args: [message(code: 'event.label', default: 'Event'), event.id])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
@@ -99,7 +98,7 @@ class UserController {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [message(code: 'event.label', default: 'Event'), params.id])
                 redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }

@@ -1,11 +1,9 @@
 package com.lai.petpoint
 
-import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
-import grails.plugin.springsecurity.annotation.Secured
+import static org.springframework.http.HttpStatus.*
 
-@Secured('ROLE_USER')
 @Transactional(readOnly = true)
 class OwnerController {
 
@@ -13,11 +11,17 @@ class OwnerController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Owner.list(params), model:[ownerCount: Owner.count()]
+        params.sort = 'name'
+        def owners = Owner.list(params)
+//        respond owners, model:[ownerCount: Owner.count(), owners: owners]
+//        def owners = Owner.sort{ }
+        render(view: 'index', model:[ownerCount: Owner.count(), owners: owners])
     }
 
     def show(Owner owner) {
-        respond owner
+        respond owner, model: [ownerId: owner.id]
+
+//        render(view: 'show', model: [owner: owner])
     }
 
     def create() {

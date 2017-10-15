@@ -78,19 +78,17 @@
     </head>
     <body>
         <a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <asset:image src="dr_dog_vaccine_right.jpg" alt="dr_dog_vaccine_right" id="status"/>
+        <asset:image src="dr_dog_vaccine_right.png" alt="dr_dog_vaccine_right" id="status"/>
         <div id="page-body" role="main">
-            <h1>Welcome to Petpoints</h1>
-            <p>The objective for this portal is to keep the petowner updated
-            with the latest appointments for their pets. The provider can create 
-            a log in and present health conditions and upcoming vaccinations to 
-            the owner.</p>
+            <h1>Welcome to PetPoint</h1>
+            <p>The objective for this portal is for updating the animal abuser and aggressive pet database.
+            Only qualified trusted persons are allowed to update the system.</p>
 
             <div id="controller-list" role="navigation">
-                <h2>SIGN-UP:</h2>
                 <ul>
-                    <li class="controller"><a href="/user/index">User Sign-Up</a></li>
-                    <li class="controller"><a href="/provider/index">Provider Sign-Up</a></li>
+                    <li class="controller"><a href="/animalAbuser/index">Animal Abuser Database</a></li>
+                    <li class="controller"><a href="/aggressivePet/index">Aggressive Pet Database</a></li>
+                    <li class="controller"><a href="/provider/index">Sign-up</a></li>
                 </ul>
             </div>
         </div>

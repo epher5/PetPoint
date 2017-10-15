@@ -1,9 +1,7 @@
 import com.lai.petpoint.Role
 import com.lai.petpoint.User
 import com.lai.petpoint.UserRole
-import groovy.util.logging.Log4j
 
-@Log4j
 class BootStrap {
 
     def init = { servletContext ->

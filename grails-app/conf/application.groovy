@@ -16,8 +16,15 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**/images/**',   access: ['permitAll']],
 	[pattern: '/**/favicon.ico', access: ['permitAll']],
 	[pattern: '/dbconsole/**',   access: ['permitAll']],
-	[pattern: '/**/**',   access: ['permitAll']], // for now
+	[pattern: '/home/**',  access: ['permitAll']], // for now
+	[pattern: '/abuserGeo/**',  access: ['permitAll']], // for now
+	[pattern: '/bewareGeo/**',  access: ['permitAll']], // for now
+	[pattern: '/**/**',          access: ['isFullyAuthenticated()']], // for now
 ]
+//grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
+//grails.plugin.springsecurity.interceptUrlMap = [
+//		[pattern: '/**/**',      access: ['isFullyAuthenticated()']], // for now
+//]
 
 grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/assets/**',      filters: 'none'],

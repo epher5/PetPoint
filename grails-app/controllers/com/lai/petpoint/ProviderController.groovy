@@ -1,11 +1,9 @@
 package com.lai.petpoint
 
-import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
-import grails.plugin.springsecurity.annotation.Secured
+import static org.springframework.http.HttpStatus.*
 
-@Secured('ROLE_USER')
 @Transactional(readOnly = true)
 class ProviderController {
 

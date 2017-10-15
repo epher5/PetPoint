@@ -19,7 +19,27 @@
             <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:display bean="owner" />
+            <ol class="property-list owner">
+
+                <li class="fieldcontain">
+                    <span id="name-label" class="property-label">Name</span>
+                    <span class="property-value" aria-labelledby="name-label"><f:display bean="owner" property="name"/></span>
+                </li>
+
+                <li class="fieldcontain">
+                    <span id="phone-label" class="property-label">Phone</span>
+                    <span class="property-value" aria-labelledby="email-label"><f:display bean="owner" property="email"/></span>
+                </li>
+
+                <li class="fieldcontain">
+                    <span id="email-label" class="property-label">Email</span>
+                    <span class="property-value" aria-labelledby="phone-label"><f:display bean="owner" property="phone"/></span>
+                </li>
+
+                <li class="fieldcontain">
+                    <g:link controller="pet" params="[ownerId: ownerId]">Pets</g:link>
+                </li>
+
             </ol>
             <g:form resource="${owner}" method="DELETE">
                 <fieldset class="buttons">

@@ -18,11 +18,25 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:table collection="${ownerList}" />
+            <g:if test="${owners}">
+            <table class="table">
+                <thead><th>Name</th><th>Email</th><th>Phone</th></thead>
+                <tbody>
+                <g:each in="${owners}" var="theOwner">
 
+                    <tr>
+                        <td><g:link action="show" id="${theOwner.id}">${theOwner.name}</g:link></td>
+                        <td><g:link action="show" id="${theOwner.id}">${theOwner.email}</g:link></td>
+                        <td><g:link action="show" id="${theOwner.id}">${theOwner.phone}</g:link></td>
+                    </tr>
+
+                </g:each>
+                </tbody>
+            </table>
             <div class="pagination">
                 <g:paginate total="${ownerCount ?: 0}" />
             </div>
+            </g:if>
         </div>
     </body>
 </html>
