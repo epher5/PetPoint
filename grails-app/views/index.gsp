@@ -87,10 +87,10 @@
             the owner.</p>
 
             <div id="controller-list" role="navigation">
-                <h2>LOGIN:</h2>
+                <h2>SIGN-UP:</h2>
                 <ul>
-                    <li class="controller"><a href="/user/index">User Sign-in</a></li>
-                    <li class="controller"><a href="/provider/index">Provider Sign-in</a></li>
+                    <li class="controller"><a href="/user/index">User Sign-Up</a></li>
+                    <li class="controller"><a href="/provider/index">Provider Sign-Up</a></li>
                 </ul>
             </div>
         </div>
